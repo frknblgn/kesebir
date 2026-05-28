@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowIcon } from './Icons';
 
 const PANO_CELLS: [string, string, string][] = [
@@ -13,6 +14,15 @@ const PANO_CELLS: [string, string, string][] = [
 export default function Hero() {
   return (
     <section id="top" className="kb-hero">
+      <div className="kb-hero-photo">
+        <Image
+          src="/images/hero-bg.jpg"
+          alt=""
+          fill
+          priority
+          style={{ objectFit: 'cover', objectPosition: 'center' }}
+        />
+      </div>
       <div className="kb-hero-bg" />
       <div className="kb-hero-grain" />
       <div className="kb-hero-orb" />
