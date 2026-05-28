@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import type { Product } from '@/lib/data';
-import { StarIcon } from './Icons';
+import { ArrowIcon, StarIcon } from './Icons';
 
 export default function ProductCard({ p }: { p: Product }) {
   const { addItem } = useCart();
@@ -66,10 +67,15 @@ export default function ProductCard({ p }: { p: Product }) {
           <span className="mono" style={{ color: 'var(--olive)' }}>
             {p.variants.map(v => v.w).join(' · ')}
           </span>
-          <span className="kb-card-price">
-            ₺{p.variants[0].price}
-            <span style={{ opacity: 0.5 }}> – ₺{p.variants[p.variants.length - 1].price}</span>
-          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <Link href={`/urunler/${p.id}`} className="kb-card-detail">
+              Detay <ArrowIcon />
+            </Link>
+            <span className="kb-card-price">
+              ₺{p.variants[0].price}
+              <span style={{ opacity: 0.5 }}> – ₺{p.variants[p.variants.length - 1].price}</span>
+            </span>
+          </div>
         </div>
       </div>
     </article>

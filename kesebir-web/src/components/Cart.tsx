@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import { ArrowIcon, BagIcon, CloseIcon, MinusIcon, PlusIcon } from './Icons';
 
@@ -119,8 +120,8 @@ export default function Cart() {
             </div>
 
             <div className="kb-cart-cta">
-              <button className="btn btn-outline" onClick={closeCart}>Sepete Git</button>
-              <button className="btn btn-primary">Ödemeye Geç <ArrowIcon /></button>
+              <Link href="/sepet" className="btn btn-outline" onClick={closeCart}>Sepete Git</Link>
+              <Link href="/odeme" className="btn btn-primary" onClick={closeCart}>Ödemeye Geç <ArrowIcon /></Link>
             </div>
           </div>
         )}
