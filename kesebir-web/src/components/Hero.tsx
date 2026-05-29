@@ -28,9 +28,7 @@ export default function Hero() {
       <div className="kb-hero-orb" />
 
       <div className="container kb-hero-top">
-        <div className="kb-hero-coord">
-          N 39°20′ · E 26°41′<br />Cunda · Ayvalık
-        </div>
+        <div className="kb-hero-coord" />
         <div className="mono" style={{ color: 'var(--stone)', textAlign: 'center' }}>
           № 001 — Hasat &apos;26
         </div>
