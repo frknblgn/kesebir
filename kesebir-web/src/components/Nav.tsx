@@ -32,7 +32,7 @@ function Logo({ inverted }: { inverted: boolean }) {
           alt="Kesebir Mandıra"
           width={160}
           height={40}
-          style={{ objectFit: 'contain', filter: inverted ? 'brightness(0) invert(1)' : 'none' }}
+          style={{ objectFit: 'contain', filter: inverted ? 'none' : 'brightness(0)' }}
           onError={() => setHasLogo(false)}
         />
       ) : (
