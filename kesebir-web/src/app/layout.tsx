@@ -34,7 +34,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="tr" data-scroll-behavior="smooth" className={`${cormorant.variable} ${inter.variable} ${jetbrains.variable}`}>
-      <body>{children}</body>
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }
