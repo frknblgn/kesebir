@@ -30,8 +30,8 @@ function Logo({ inverted }: { inverted: boolean }) {
         <img
           src={LOGO_PATH}
           alt="Kesebir Mandıra"
-          width={220}
-          height={55}
+          width={440}
+          height={110}
           style={{ objectFit: 'contain', filter: inverted ? 'none' : 'brightness(0)' }}
           onError={() => setHasLogo(false)}
         />
