@@ -2,8 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
-import { NAV_PRODUCTS, NAV_STORY, type NavItem } from '@/lib/data';
+import { NAV_STORY, type NavItem } from '@/lib/data';
 import {
   ArrowIcon,
   BagIcon,
@@ -19,11 +20,7 @@ function Logo({ inverted }: { inverted: boolean }) {
   const color = inverted ? 'var(--cream)' : 'var(--navy)';
   return (
     <Link href="/" style={{ color, display: 'flex', alignItems: 'center', gap: 12 }}>
-      <CrestIcon
-        width="28"
-        height="28"
-        style={{ color: inverted ? 'var(--stone)' : 'var(--olive)' }}
-      />
+      <CrestIcon width="28" height="28" style={{ color: inverted ? 'var(--stone)' : 'var(--olive)' }} />
       <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
         <span style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: 22, letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 500 }}>
           Kesebir
@@ -44,9 +41,7 @@ function Dropdown({ items, eyebrow, footnote, footHref }: { items: NavItem[]; ey
         {items.map(item => (
           <li key={item.label}>
             <Link href={item.href} className="kb-dropdown-row">
-              <span style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: 22, letterSpacing: '0.02em' }}>
-                {item.label}
-              </span>
+              <span style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: 22, letterSpacing: '0.02em' }}>{item.label}</span>
               <span className="mono" style={{ color: 'var(--olive)', opacity: 0.7 }}>{item.hint}</span>
             </Link>
           </li>
@@ -64,6 +59,7 @@ function Dropdown({ items, eyebrow, footnote, footHref }: { items: NavItem[]; ey
 
 export default function Nav() {
   const { totalQty, pulse, openCart } = useCart();
+  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -104,22 +100,14 @@ export default function Nav() {
           <div className="kb-nav-center">
             <Link href="/" className="kb-nav-item">Ana Sayfa</Link>
 
-            <div onMouseEnter={() => enter('urunler')} onMouseLeave={leave} style={{ position: 'relative' }}>
-              <button
-                className={`kb-nav-item${open === 'urunler' ? ' active' : ''}`}
-                onClick={() => setOpen(open === 'urunler' ? null : 'urunler')}
-              >
-                Ürünlerimiz <CaretIcon style={{ transform: open === 'urunler' ? 'rotate(180deg)' : 'none', transition: 'transform 320ms' }} />
-              </button>
-              <div className={`kb-drop-wrap${open === 'urunler' ? ' show' : ''}`}>
-                <Dropdown items={NAV_PRODUCTS} eyebrow="Atölyemizden · El Yapımı" footnote="Soğuk zincirle 48 saatte kapınızda" footHref="/urunler" />
-              </div>
-            </div>
+            {/* Ürünlerimiz — direkt link, dropdown yok */}
+            <Link href="/urunler" className="kb-nav-item">Ürünlerimiz</Link>
 
+            {/* Hikayemiz — click'te navigate, hover'da dropdown */}
             <div onMouseEnter={() => enter('hikayemiz')} onMouseLeave={leave} style={{ position: 'relative' }}>
               <button
                 className={`kb-nav-item${open === 'hikayemiz' ? ' active' : ''}`}
-                onClick={() => setOpen(open === 'hikayemiz' ? null : 'hikayemiz')}
+                onClick={() => router.push('/hikayemiz')}
               >
                 Hikayemiz <CaretIcon style={{ transform: open === 'hikayemiz' ? 'rotate(180deg)' : 'none', transition: 'transform 320ms' }} />
               </button>
@@ -151,7 +139,7 @@ export default function Nav() {
           <button className="kb-icon-btn" onClick={() => setMobileOpen(false)} aria-label="Kapat"><CloseIcon /></button>
         </div>
         <div style={{ marginTop: 48, display: 'flex', flexDirection: 'column', gap: 6 }}>
-          {([['Ana Sayfa', '/'], ['Ürünlerimiz', '/urunler'], ['Hikayemiz', '/hikayemiz'], ['İletişim', '/iletisim']] as const).map(
+          {([['Ana Sayfa', '/'], ['Ürünlerimiz', '/urunler'], ['Hikayemiz', '/hikayemiz'], ['İletişim', '/iletisim'], ['Blog', '/blog']] as const).map(
             ([l, h]) => (
               <Link key={l} href={h} onClick={() => setMobileOpen(false)} style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: 44, letterSpacing: '0.02em', padding: '14px 0', borderBottom: '1px solid rgba(217,207,193,0.2)' }}>
                 {l}

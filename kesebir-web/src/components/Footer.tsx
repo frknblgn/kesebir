@@ -21,35 +21,35 @@ export default function Footer() {
           <div>
             <div className="kb-foot-h">Mağaza</div>
             <ul className="kb-foot-list">
-              <li><Link href="#urunler">Cunda Peynirleri</Link></li>
-              <li><Link href="#urunler">Saganaki</Link></li>
-              <li><Link href="#urunler">Zeytinyağı</Link></li>
-              <li><Link href="#urunler">Zeytin</Link></li>
-              <li><Link href="#urunler">Hediye Setleri</Link></li>
+              <li><Link href="/urunler?cat=peynir">Peynir Çeşitleri</Link></li>
+              <li><Link href="/urunler?cat=saganaki">Saganaki</Link></li>
+              <li><Link href="/urunler?cat=zeytin">Zeytinyağı & Zeytin</Link></li>
+              <li><Link href="/urunler">Tüm Ürünler</Link></li>
             </ul>
           </div>
 
           <div>
             <div className="kb-foot-h">Hikayemiz</div>
             <ul className="kb-foot-list">
-              <li><Link href="#hikaye">Hakkımızda</Link></li>
-              <li><Link href="#hikaye">Üretim Süreci</Link></li>
-              <li><Link href="#hikaye">Sertifikalarımız</Link></li>
-              <li><Link href="#hikaye">Basında Biz</Link></li>
+              <li><Link href="/hikayemiz">Hakkımızda</Link></li>
+              <li><Link href="/hikayemiz#uretim-sureci">Üretim Süreci</Link></li>
+              <li><Link href="/hikayemiz#sertifikalar">Sertifikalarımız</Link></li>
+              <li><Link href="/basinda-biz">Basında Biz</Link></li>
+              <li><Link href="/blog">Blog</Link></li>
             </ul>
           </div>
 
           <div>
             <div className="kb-foot-h">Ziyaret</div>
             <p className="kb-foot-body" style={{ marginBottom: 18 }}>
-              Taş Kahve arkası<br />
-              Cunda Adası · Ayvalık<br />
+              Namık Kemal, Belediye Sok. No:7<br />
+              10405 Ayvalık / Balıkesir<br />
               Pzt–Cmt · 09:00–18:00
             </p>
             <div className="kb-foot-h">İletişim</div>
             <p className="kb-foot-body">
-              +90 266 ··· ····<br />
-              merhaba@kesebirmandira.com
+              +90 535 439 96 10<br />
+              i-kesebir@hotmail.com
             </p>
           </div>
         </div>
