@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
 import type { Product } from '@/lib/data';
 import { ArrowIcon, StarIcon } from './Icons';
@@ -13,8 +14,11 @@ export default function ProductCard({ p }: { p: Product }) {
 
   return (
     <article className="kb-card">
-      <div className={`kb-card-img ph${p.ph ? ` ${p.ph}` : ''}`}>
-        <span className="ph-label">{p.phLabel}</span>
+      <div className={`kb-card-img${!p.image ? ` ph${p.ph ? ` ${p.ph}` : ''}` : ''}`}>
+        {p.image
+          ? <Image src={p.image} alt={p.name} fill style={{ objectFit: 'cover' }} sizes="480px" />
+          : <span className="ph-label">{p.phLabel}</span>
+        }
         <div className="kb-card-num mono">№ {p.n}</div>
         <div className="kb-card-badges">
           {p.badges.map(b => (

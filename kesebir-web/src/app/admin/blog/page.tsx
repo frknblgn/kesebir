@@ -1,8 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import AdminShell from '@/components/AdminShell';
 import { BLOG_POSTS, type BlogPost } from '@/lib/blog-data';
+
+const RichTextEditor = dynamic(() => import('@/components/RichTextEditor'), { ssr: false });
 
 export default function AdminBlogPage() {
   const [posts, setPosts] = useState<BlogPost[]>(BLOG_POSTS);
@@ -139,8 +142,7 @@ function BlogEditForm({ post, onSave, onCancel }: {
 
       <div className="kb-form-group">
         <label className="kb-form-label">İçerik</label>
-        <textarea className="kb-form-input kb-form-textarea" value={form.content} onChange={e => set('content', e.target.value)} rows={16} style={{ fontFamily: 'monospace', fontSize: 13 }} />
-        <span style={{ fontSize: 11, color: '#888', marginTop: 4 }}>Paragrafları boş satırla ayırın. **kalın** için çift yıldız kullanın.</span>
+        <RichTextEditor value={form.content} onChange={v => set('content', v)} placeholder="Blog yazısını buraya yazın…" />
       </div>
 
       <div className="kb-admin-form-actions">

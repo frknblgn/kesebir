@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 import { NAV_STORY, type NavItem } from '@/lib/data';
@@ -16,19 +17,36 @@ import {
   UserIcon,
 } from './Icons';
 
+const LOGO_PATH = '/logo.png';
+
 function Logo({ inverted }: { inverted: boolean }) {
   const color = inverted ? 'var(--cream)' : 'var(--navy)';
+  const [hasLogo, setHasLogo] = useState(true);
+
   return (
     <Link href="/" style={{ color, display: 'flex', alignItems: 'center', gap: 12 }}>
-      <CrestIcon width="28" height="28" style={{ color: inverted ? 'var(--stone)' : 'var(--olive)' }} />
-      <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
-        <span style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: 22, letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 500 }}>
-          Kesebir
-        </span>
-        <span style={{ fontFamily: 'var(--font-jetbrains), monospace', fontSize: 9, letterSpacing: '0.32em', textTransform: 'uppercase', marginTop: 3, opacity: 0.7 }}>
-          Mandıra · 1979
-        </span>
-      </div>
+      {hasLogo ? (
+        <Image
+          src={LOGO_PATH}
+          alt="Kesebir Mandıra"
+          width={160}
+          height={40}
+          style={{ objectFit: 'contain', filter: inverted ? 'brightness(0) invert(1)' : 'none' }}
+          onError={() => setHasLogo(false)}
+        />
+      ) : (
+        <>
+          <CrestIcon width="28" height="28" style={{ color: inverted ? 'var(--stone)' : 'var(--olive)' }} />
+          <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
+            <span style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: 22, letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 500 }}>
+              Kesebir
+            </span>
+            <span style={{ fontFamily: 'var(--font-jetbrains), monospace', fontSize: 9, letterSpacing: '0.32em', textTransform: 'uppercase', marginTop: 3, opacity: 0.7 }}>
+              Mandıra · 1979
+            </span>
+          </div>
+        </>
+      )}
     </Link>
   );
 }

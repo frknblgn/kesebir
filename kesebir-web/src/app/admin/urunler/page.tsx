@@ -1,8 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import AdminShell from '@/components/AdminShell';
 import { PRODUCTS, CATEGORIES, type Product } from '@/lib/data';
+
+const RichTextEditor = dynamic(() => import('@/components/RichTextEditor'), { ssr: false });
 
 export default function AdminUrunlerPage() {
   const [products, setProducts] = useState<Product[]>(PRODUCTS);
@@ -20,34 +24,39 @@ export default function AdminUrunlerPage() {
     <AdminShell>
       <div className="kb-admin-page-head">
         <h1 className="kb-admin-h1">Ürünler</h1>
-        {saved && <div className="kb-admin-toast">✓ Değişiklikler kaydedildi</div>}
+        {saved && <div className="kb-admin-toast">✓ Kaydedildi</div>}
       </div>
 
       <div className="kb-admin-note">
-        <strong>Not:</strong> Bu panelde yaptığınız değişiklikler oturum süresince geçerlidir. Kalıcı kayıt için kod tabanında <code>src/lib/data.ts</code> dosyasını güncelleyin.
+        <strong>Not:</strong> Görseller kalıcı olarak <code>public/images/products/</code> klasörüne kaydedilir. Metin değişiklikleri oturum süresince geçerlidir; kalıcı kayıt için <code>src/lib/data.ts</code> dosyasını güncelleyin.
       </div>
 
       {editing ? (
         <ProductEditForm product={editing} onSave={handleSave} onCancel={() => setEditing(null)} />
       ) : (
         <div className="kb-admin-table">
-          <div className="kb-admin-table-head">
+          <div className="kb-admin-table-head" style={{ gridTemplateColumns: '60px 2fr 1fr 1fr 80px' }}>
+            <span>Görsel</span>
             <span>Ürün Adı</span>
             <span>Kategori</span>
-            <span>Fiyat Aralığı</span>
+            <span>Fiyat</span>
             <span></span>
           </div>
           {products.map(p => (
-            <div key={p.id} className="kb-admin-table-row">
+            <div key={p.id} className="kb-admin-table-row" style={{ gridTemplateColumns: '60px 2fr 1fr 1fr 80px' }}>
+              <div>
+                {p.image
+                  ? <Image src={p.image} alt={p.name} width={48} height={48} style={{ objectFit: 'cover', borderRadius: 2 }} />
+                  : <div style={{ width: 48, height: 48, background: '#e8e5df', borderRadius: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, color: '#aaa' }}>YOK</div>
+                }
+              </div>
               <div>
                 <strong>{p.name}</strong>
                 <div style={{ fontSize: 12, color: '#888', marginTop: 2 }}>{p.sub}</div>
               </div>
               <div>{CATEGORIES.find(c => c.id === p.category)?.label ?? p.category}</div>
               <div>₺{p.variants[0].price} – ₺{p.variants[p.variants.length - 1].price}</div>
-              <div>
-                <button className="kb-admin-btn" onClick={() => setEditing(p)}>Düzenle</button>
-              </div>
+              <div><button className="kb-admin-btn" onClick={() => setEditing(p)}>Düzenle</button></div>
             </div>
           ))}
         </div>
@@ -62,11 +71,54 @@ function ProductEditForm({ product, onSave, onCancel }: {
   onCancel: () => void;
 }) {
   const [form, setForm] = useState({ ...product });
-  const set = (k: keyof Product, v: string) => setForm(f => ({ ...f, [k]: v }));
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const set = (k: keyof Product, v: unknown) => setForm(f => ({ ...f, [k]: v }));
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    const fd = new FormData();
+    fd.append('file', file);
+    const res = await fetch('/api/admin/upload', { method: 'POST', body: fd });
+    const data = await res.json();
+    if (data.url) set('image', data.url);
+    setUploading(false);
+  };
 
   return (
     <div className="kb-admin-form">
       <h2 className="kb-admin-form-h">{form.name}</h2>
+
+      {/* Görsel */}
+      <div className="kb-form-group">
+        <label className="kb-form-label">Ürün Görseli</label>
+        <div className="kb-admin-img-upload">
+          {form.image ? (
+            <div className="kb-admin-img-preview">
+              <Image src={form.image} alt="" width={160} height={200} style={{ objectFit: 'cover', borderRadius: 2 }} />
+              <button type="button" className="kb-admin-img-remove" onClick={() => set('image', '')}>✕ Kaldır</button>
+            </div>
+          ) : (
+            <div className="kb-admin-img-placeholder" onClick={() => fileRef.current?.click()}>
+              <span>+ Görsel Yükle</span>
+              <span style={{ fontSize: 11, opacity: 0.6 }}>JPG, PNG, WebP · Önerilen: 480×600px</span>
+            </div>
+          )}
+          <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleImageUpload} />
+          {!form.image && (
+            <button type="button" className="kb-admin-btn" onClick={() => fileRef.current?.click()} style={{ marginTop: 8 }}>
+              {uploading ? 'Yükleniyor…' : 'Dosya Seç'}
+            </button>
+          )}
+          {form.image && (
+            <button type="button" className="kb-admin-btn" onClick={() => fileRef.current?.click()} style={{ marginTop: 8 }}>
+              {uploading ? 'Yükleniyor…' : 'Değiştir'}
+            </button>
+          )}
+        </div>
+      </div>
 
       <div className="kb-form-row">
         <div className="kb-form-group">
@@ -90,7 +142,7 @@ function ProductEditForm({ product, onSave, onCancel }: {
 
       <div className="kb-form-group">
         <label className="kb-form-label">Açıklama</label>
-        <textarea className="kb-form-input kb-form-textarea" value={form.description} onChange={e => set('description', e.target.value)} rows={4} />
+        <RichTextEditor value={form.description} onChange={v => set('description', v)} placeholder="Ürün açıklaması…" />
       </div>
 
       <div className="kb-form-group">
@@ -99,22 +151,19 @@ function ProductEditForm({ product, onSave, onCancel }: {
       </div>
 
       <div className="kb-admin-variants-section">
-        <label className="kb-form-label" style={{ display: 'block', marginBottom: 12 }}>Fiyatlar</label>
+        <label className="kb-form-label" style={{ display: 'block', marginBottom: 12 }}>Gramaj & Fiyatlar</label>
         {form.variants.map((v, i) => (
           <div key={i} className="kb-admin-variant-row">
-            <span className="mono" style={{ minWidth: 60 }}>{v.w}</span>
-            <div className="kb-form-group" style={{ margin: 0, flex: 1 }}>
-              <input
-                className="kb-form-input"
-                type="number"
-                value={v.price}
-                onChange={e => {
-                  const variants = [...form.variants];
-                  variants[i] = { ...v, price: Number(e.target.value) };
-                  setForm(f => ({ ...f, variants }));
-                }}
-              />
-            </div>
+            <input className="kb-form-input" value={v.w} onChange={e => {
+              const variants = [...form.variants];
+              variants[i] = { ...v, w: e.target.value };
+              setForm(f => ({ ...f, variants }));
+            }} style={{ width: 80 }} />
+            <input className="kb-form-input" type="number" value={v.price} onChange={e => {
+              const variants = [...form.variants];
+              variants[i] = { ...v, price: Number(e.target.value) };
+              setForm(f => ({ ...f, variants }));
+            }} style={{ flex: 1 }} />
             <span style={{ fontSize: 13, color: '#888' }}>₺</span>
           </div>
         ))}

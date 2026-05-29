@@ -14,6 +14,7 @@ export interface Product {
   ph: string;
   phLabel: string;
   n: string;
+  image?: string;
 }
 
 export interface Category { id: string; label: string; }

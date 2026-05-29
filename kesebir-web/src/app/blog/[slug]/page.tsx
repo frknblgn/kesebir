@@ -35,17 +35,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               <span>{post.author}</span>
             </div>
 
-            <div className="kb-blog-post-content">
-              {post.content.split('\n\n').map((block, i) => {
-                if (block.startsWith('**') && block.endsWith('**')) {
-                  return <h3 key={i} className="kb-blog-post-h3">{block.replace(/\*\*/g, '')}</h3>;
-                }
-                const html = block
-                  .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-                  .replace(/\n/g, '<br />');
-                return <p key={i} dangerouslySetInnerHTML={{ __html: html }} />;
-              })}
-            </div>
+            <div
+              className="kb-blog-post-content"
+              dangerouslySetInnerHTML={{ __html: post.content.startsWith('<') ? post.content : post.content.split('\n\n').map(b => `<p>${b.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br/>')}</p>`).join('') }}
+            />
 
             <div className="kb-blog-post-back">
               <Link href="/blog" className="kb-story-link">← Tüm yazılara dön</Link>
