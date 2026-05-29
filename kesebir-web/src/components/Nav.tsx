@@ -17,7 +17,7 @@ import {
   UserIcon,
 } from './Icons';
 
-const LOGO_PATH = '/logo.png';
+const LOGO_PATH = '/logo.svg';
 
 function Logo({ inverted }: { inverted: boolean }) {
   const color = inverted ? 'var(--cream)' : 'var(--navy)';
@@ -26,7 +26,8 @@ function Logo({ inverted }: { inverted: boolean }) {
   return (
     <Link href="/" style={{ color, display: 'flex', alignItems: 'center', gap: 12 }}>
       {hasLogo ? (
-        <Image
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
           src={LOGO_PATH}
           alt="Kesebir Mandıra"
           width={160}
