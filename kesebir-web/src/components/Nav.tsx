@@ -32,6 +32,7 @@ function Logo({ inverted }: { inverted: boolean }) {
           alt="Kesebir Mandıra"
           width={440}
           height={110}
+          className="kb-nav-logo"
           style={{ objectFit: 'contain', filter: inverted ? 'none' : 'brightness(0)' }}
           onError={() => setHasLogo(false)}
         />
