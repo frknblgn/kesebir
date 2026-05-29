@@ -33,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="tr" className={`${cormorant.variable} ${inter.variable} ${jetbrains.variable}`}>
+    <html lang="tr" data-scroll-behavior="smooth" className={`${cormorant.variable} ${inter.variable} ${jetbrains.variable}`}>
       <body>{children}</body>
     </html>
   );
